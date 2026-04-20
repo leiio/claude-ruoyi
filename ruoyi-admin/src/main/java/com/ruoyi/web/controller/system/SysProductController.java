@@ -1,6 +1,7 @@
 package com.ruoyi.web.controller.system;
 
 import java.util.List;
+import java.util.Map;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -101,5 +102,27 @@ public class SysProductController extends BaseController
     public AjaxResult remove(@PathVariable Long[] productIds)
     {
         return toAjax(productService.deleteProductByIds(productIds));
+    }
+
+    /**
+     * 修改商品状态
+     */
+    @PreAuthorize("@ss.hasPermi('product:product:edit')")
+    @Log(title = "商品状态", businessType = BusinessType.UPDATE)
+    @PutMapping("/changeStatus")
+    public AjaxResult changeStatus(@RequestBody SysProduct product)
+    {
+        return toAjax(productService.updateProductStatus(product));
+    }
+
+    /**
+     * 获取各分类商品库存统计
+     */
+    @PreAuthorize("@ss.hasPermi('product:product:list')")
+    @GetMapping("/inventoryStats")
+    public AjaxResult getInventoryStats()
+    {
+        List<Map<String, Object>> list = productService.selectInventoryStatsByCategory();
+        return success(list);
     }
 }

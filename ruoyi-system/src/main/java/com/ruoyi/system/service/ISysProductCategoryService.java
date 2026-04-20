@@ -89,4 +89,13 @@ public interface ISysProductCategoryService
      * @return 结果
      */
     public boolean checkExistProduct(Long categoryId);
+
+    /**
+     * 修改分类状态
+     *
+     * @param categoryId 分类ID
+     * @param status 状态
+     * @return 结果
+     */
+    public int updateCategoryStatus(Long categoryId, String status);
 }

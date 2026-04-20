@@ -130,7 +130,7 @@
 </template>
 
 <script>
-import { listCategory, getCategory, addCategory, updateCategory, delCategory, treeselect } from '@/api/product/category'
+import { listCategory, getCategory, addCategory, updateCategory, delCategory, treeselect, changeCategoryStatus } from '@/api/product/category'
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 
@@ -216,8 +216,8 @@ export default {
     },
     handleStatusChange(row) {
       const text = row.status === '0' ? '启用' : '停用'
-      this.$modal.confirm('确认要"' + text + '""' + row.categoryName + '"分类吗？').then(() => {
-        return updateCategory({ categoryId: row.categoryId, status: row.status })
+      this.$modal.confirm('确认要"' + text + '" "' + row.categoryName + '"分类吗？').then(() => {
+        return changeCategoryStatus({ categoryId: row.categoryId, status: row.status })
       }).then(() => {
         this.$modal.msgSuccess(text + '成功')
       }).catch(() => {

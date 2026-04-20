@@ -52,3 +52,20 @@ export function exportProduct(query) {
     responseType: 'blob'
   })
 }
+
+// 修改商品状态
+export function changeStatus(data) {
+  return request({
+    url: '/system/product/changeStatus',
+    method: 'put',
+    data: data
+  })
+}
+
+// 获取各分类商品库存统计
+export function getInventoryStats() {
+  return request({
+    url: '/system/product/inventoryStats',
+    method: 'get'
+  })
+}

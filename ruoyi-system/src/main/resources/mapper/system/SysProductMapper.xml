@@ -140,4 +140,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
 
+    <update id="updateProductStatus">
+        update sys_product set status = #{status}, update_time = sysdate() where product_id = #{productId}
+    </update>
+
+<select id="selectInventoryStatsByCategory" resultType="java.util.Map">
+        select c.category_id as categoryId, c.category_name as categoryName,
+               count(p.product_id) as productCount,
+               coalesce(sum(p.stock), 0) as totalStock,
+               coalesce(sum(p.stock * p.cost_price), 0) as totalCost
+        from sys_product_category c
+        left join sys_product p on c.category_id = p.category_id and p.del_flag = '0' and p.status = '0'
+        where c.del_flag = '0' and c.status = '0'
+        group by c.category_id, c.category_name
+        order by c.order_num
+    </select>
+
 </mapper>

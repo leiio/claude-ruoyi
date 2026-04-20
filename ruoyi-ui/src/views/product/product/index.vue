@@ -20,7 +20,7 @@
       <el-form-item label="商品分类" prop="categoryId">
         <el-select v-model="queryParams.categoryId" placeholder="商品分类" clearable>
           <el-option
-            v-for="dict in categoryOptions"
+            v-for="dict in searchCategoryOptions"
             :key="dict.id"
             :label="dict.label"
             :value="dict.id"
@@ -168,6 +168,7 @@
                   :key="dict.id"
                   :label="dict.label"
                   :value="dict.id"
+                  :disabled="dict.status === '1'"
                 />
               </el-select>
             </el-form-item>
@@ -243,7 +244,7 @@
 </template>
 
 <script>
-import { listProduct, getProduct, addProduct, updateProduct, delProduct } from '@/api/product/product'
+import { listProduct, getProduct, addProduct, updateProduct, delProduct, changeStatus } from '@/api/product/product'
 import { listCategory } from '@/api/product/category'
 
 export default {
@@ -277,9 +278,14 @@ export default {
       }
     }
   },
+  computed: {
+    searchCategoryOptions() {
+      return this.categoryOptions.filter(item => item.status === '0')
+    }
+  },
   created() {
     this.getList()
-    this.getCategoryTreeselect()
+    this.getCategoryTreeselect(true)
   },
   methods: {
     getList() {
@@ -290,11 +296,16 @@ export default {
         this.loading = false
       })
     },
-    getCategoryTreeselect() {
+    getCategoryTreeselect(includeDisabled = false) {
       listCategory().then(response => {
-        this.categoryOptions = response.data.map(item => ({
+        let data = response.data
+        if (!includeDisabled) {
+          data = data.filter(item => item.status === '0')
+        }
+        this.categoryOptions = data.map(item => ({
           id: item.categoryId,
-          label: item.categoryName
+          label: item.categoryName,
+          status: item.status
         }))
       })
     },
@@ -325,6 +336,7 @@ export default {
     },
     handleUpdate(row) {
       this.reset()
+      this.getCategoryTreeselect(true)
       const productId = row.productId || this.ids
       getProduct(productId).then(response => {
         this.form = response.data
@@ -335,7 +347,7 @@ export default {
     handleStatusChange(row) {
       const text = row.status === '0' ? '启用' : '停用'
       this.$modal.confirm('确认要"' + text + '"商品"' + row.productName + '"吗？').then(() => {
-        return updateProduct({ productId: row.productId, status: row.status })
+        return changeStatus({ productId: row.productId, status: row.status })
       }).then(() => {
         this.$modal.msgSuccess(text + '成功')
       }).catch(() => {

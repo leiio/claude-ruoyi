@@ -211,4 +211,17 @@ public class SysProductCategoryServiceImpl implements ISysProductCategoryService
         int result = categoryMapper.checkExistProduct(categoryId);
         return result > 0;
     }
+
+    /**
+     * 修改分类状态
+     */
+    @Override
+    public int updateCategoryStatus(Long categoryId, String status)
+    {
+        SysProductCategory category = new SysProductCategory();
+        category.setCategoryId(categoryId);
+        category.setStatus(status);
+        category.setUpdateBy(SecurityUtils.getUsername());
+        return categoryMapper.updateCategory(category);
+    }
 }

@@ -1,6 +1,7 @@
 package com.ruoyi.system.mapper;
 
 import java.util.List;
+import java.util.Map;
 import com.ruoyi.common.core.domain.entity.SysProduct;
 import org.apache.ibatis.annotations.Param;
 
@@ -66,4 +67,20 @@ public interface SysProductMapper
      * @return 结果
      */
     public int deleteProductByIds(Long[] productIds);
+
+    /**
+     * 修改商品状态
+     *
+     * @param productId 商品ID
+     * @param status 商品状态
+     * @return 结果
+     */
+    public int updateProductStatus(@Param("productId") Long productId, @Param("status") String status);
+
+    /**
+     * 查询各分类商品库存统计
+     *
+     * @return 库存统计列表
+     */
+    public List<Map<String, Object>> selectInventoryStatsByCategory();
 }

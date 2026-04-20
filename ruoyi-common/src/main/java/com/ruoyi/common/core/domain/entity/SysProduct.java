@@ -5,9 +5,10 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
  * 商品表 sys_product
@@ -19,52 +20,66 @@ public class SysProduct extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 商品ID */
+    @Excel(name = "商品ID", cellType = Excel.ColumnType.NUMERIC)
     private Long productId;
 
     /** 商品名称 */
+    @Excel(name = "商品名称")
     private String productName;
 
     /** 商品编码 */
+    @Excel(name = "商品编码")
     private String productCode;
 
     /** 商品分类ID */
     private Long categoryId;
 
+    /** 分类名称 */
+    @Excel(name = "商品分类")
+    private String categoryName;
+
     /** 商品价格 */
+    @Excel(name = "商品价格", cellType = Excel.ColumnType.NUMERIC)
     private BigDecimal price;
 
     /** 成本价 */
+    @Excel(name = "成本价", cellType = Excel.ColumnType.NUMERIC)
     private BigDecimal costPrice;
 
     /** 库存数量 */
+    @Excel(name = "库存数量", cellType = Excel.ColumnType.NUMERIC)
     private Integer stock;
 
     /** 单位 */
+    @Excel(name = "单位")
     private String productUnit;
 
     /** 重量(kg) */
+    @Excel(name = "重量(kg)", cellType = Excel.ColumnType.NUMERIC)
     private BigDecimal productWeight;
 
     /** 商品描述 */
+    @Excel(name = "商品描述")
     private String productDesc;
 
     /** 商品图片 */
+    @Excel(name = "商品图片")
     private String productImg;
 
     /** 商品状态（0正常 1下架） */
+    @Excel(name = "状态", readConverterExp = "0=正常,1=下架")
     private String status;
 
     /** 是否促销（0否 1是） */
+    @Excel(name = "是否促销", readConverterExp = "0=否,1=是")
     private String promote;
 
     /** 促销价格 */
+    @Excel(name = "促销价格", cellType = Excel.ColumnType.NUMERIC)
     private BigDecimal promotePrice;
 
     /** 删除标志（0存在 1删除） */
     private String delFlag;
-
-    /** 分类名称 */
-    private String categoryName;
 
     public Long getProductId()
     {
@@ -99,7 +114,6 @@ public class SysProduct extends BaseEntity
         this.productCode = productCode;
     }
 
-    @NotNull(message = "商品分类不能为空")
     public Long getCategoryId()
     {
         return categoryId;
@@ -108,6 +122,16 @@ public class SysProduct extends BaseEntity
     public void setCategoryId(Long categoryId)
     {
         this.categoryId = categoryId;
+    }
+
+    public String getCategoryName()
+    {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName)
+    {
+        this.categoryName = categoryName;
     }
 
     @NotNull(message = "商品价格不能为空")
@@ -222,16 +246,6 @@ public class SysProduct extends BaseEntity
     public void setDelFlag(String delFlag)
     {
         this.delFlag = delFlag;
-    }
-
-    public String getCategoryName()
-    {
-        return categoryName;
-    }
-
-    public void setCategoryName(String categoryName)
-    {
-        this.categoryName = categoryName;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.ruoyi.system.service.impl;
 
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -99,5 +100,25 @@ public class SysProductServiceImpl implements ISysProductService
             return "1";
         }
         return "0";
+    }
+
+    /**
+     * 修改商品状态
+     */
+    @Override
+    @Transactional
+    public int updateProductStatus(SysProduct product)
+    {
+        product.setUpdateBy(SecurityUtils.getUsername());
+        return productMapper.updateProductStatus(product.getProductId(), product.getStatus());
+    }
+
+    /**
+     * 查询各分类商品库存统计
+     */
+    @Override
+    public List<Map<String, Object>> selectInventoryStatsByCategory()
+    {
+        return productMapper.selectInventoryStatsByCategory();
     }
 }

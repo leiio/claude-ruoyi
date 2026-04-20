@@ -112,4 +112,15 @@ public class SysProductCategoryController extends BaseController
     {
         return toAjax(categoryService.deleteCategoryById(categoryId));
     }
+
+    /**
+     * 修改分类状态
+     */
+    @PreAuthorize("@ss.hasPermi('product:category:edit')")
+    @Log(title = "分类状态", businessType = BusinessType.UPDATE)
+    @PutMapping("/changeStatus")
+    public AjaxResult changeStatus(@RequestBody SysProductCategory category)
+    {
+        return toAjax(categoryService.updateCategoryStatus(category.getCategoryId(), category.getStatus()));
+    }
 }

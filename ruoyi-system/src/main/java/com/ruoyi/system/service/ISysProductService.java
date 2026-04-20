@@ -1,6 +1,7 @@
 package com.ruoyi.system.service;
 
 import java.util.List;
+import java.util.Map;
 import com.ruoyi.common.core.domain.entity.SysProduct;
 
 /**
@@ -65,4 +66,19 @@ public interface ISysProductService
      * @return 结果
      */
     public String checkProductCodeUnique(SysProduct product);
+
+    /**
+     * 修改商品状态
+     *
+     * @param product 商品信息
+     * @return 结果
+     */
+    public int updateProductStatus(SysProduct product);
+
+    /**
+     * 查询各分类商品库存统计
+     *
+     * @return 库存统计列表
+     */
+    public List<Map<String, Object>> selectInventoryStatsByCategory();
 }

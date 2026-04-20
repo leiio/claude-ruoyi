@@ -60,3 +60,12 @@ export function exportCategory(query) {
     responseType: 'blob'
   })
 }
+
+// 修改分类状态
+export function changeCategoryStatus(data) {
+  return request({
+    url: '/system/category/changeStatus',
+    method: 'put',
+    data: data
+  })
+}
