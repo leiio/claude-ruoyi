@@ -243,7 +243,7 @@
 </template>
 
 <script>
-import { listProduct, getProduct, addProduct, updateProduct, delProduct, exportProduct } from '@/api/product/product'
+import { listProduct, getProduct, addProduct, updateProduct, delProduct } from '@/api/product/product'
 import { listCategory } from '@/api/product/category'
 
 export default {
@@ -352,11 +352,9 @@ export default {
       }).catch(() => {})
     },
     handleExport() {
-      this.$modal.confirm('是否确认导出所有商品数据项？').then(() => {
-        exportProduct(this.queryParams).then(response => {
-          this.$download.name('商品数据_' + new Date().getTime() + '.xlsx')
-        })
-      }).catch(() => {})
+      this.download('system/product/export', {
+        ...this.queryParams
+      }, `商品数据_${new Date().getTime()}.xlsx`)
     },
     submitForm() {
       this.$refs['form'].validate(valid => {

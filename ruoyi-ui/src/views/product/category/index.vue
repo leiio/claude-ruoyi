@@ -101,7 +101,6 @@
           <treeselect
             v-model="form.parentId"
             :options="categoryOptions"
-            :normalizer="normalizer"
             :show-count="true"
             placeholder="选择父分类"
           />
@@ -173,16 +172,6 @@ export default {
         this.loading = false
       })
     },
-    normalizer(node) {
-      if (node.children && !node.children.length) {
-        delete node.children
-      }
-      return {
-        id: node.categoryId,
-        label: node.categoryName,
-        children: node.children
-      }
-    },
     handleQuery() {
       this.getList()
     },
@@ -203,7 +192,9 @@ export default {
       }
       this.$nextTick(() => {
         treeselect().then(res => {
-          this.categoryOptions = this.handleTree(res.data, 'categoryId')
+          this.categoryOptions = []
+          const root = { id: 0, label: '顶级分类', children: res.data }
+          this.categoryOptions.push(root)
         })
       })
       this.open = true
@@ -212,7 +203,9 @@ export default {
     handleUpdate(row) {
       this.$nextTick(() => {
         treeselect().then(res => {
-          this.categoryOptions = this.handleTree(res.data, 'categoryId')
+          this.categoryOptions = []
+          const root = { id: 0, label: '顶级分类', children: res.data }
+          this.categoryOptions.push(root)
         })
       })
       getCategory(row.categoryId).then(response => {
