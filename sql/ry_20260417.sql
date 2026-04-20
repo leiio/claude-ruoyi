@@ -721,3 +721,82 @@ create table gen_table_column (
   update_time       datetime                                   comment '更新时间',
   primary key (column_id)
 ) engine=innodb auto_increment=1 comment = '代码生成业务表字段';
+
+
+-- ==============================
+-- 21、商品分类表
+-- ==============================
+drop table if exists sys_product_category;
+create table sys_product_category (
+  category_id       bigint(20)      not null auto_increment    comment '分类ID',
+  parent_id         bigint(20)      default 0                   comment '父分类ID',
+  category_name     varchar(50)     not null                   comment '分类名称',
+  order_num         int(4)          default 0                   comment '显示顺序',
+  status            char(1)         default '0'                 comment '状态（0正常 1停用）',
+  create_by         varchar(64)     default ''                 comment '创建者',
+  create_time       datetime                                   comment '创建时间',
+  update_by         varchar(64)     default ''                  comment '更新者',
+  update_time       datetime                                   comment '更新时间',
+  remark            varchar(500)    default null                comment '备注',
+  primary key (category_id)
+) engine=innodb auto_increment=100 comment='商品分类表';
+
+-- 初始化商品分类数据
+insert into sys_product_category values(1, 0, '数码电子', 1, '0', 'admin', sysdate(), '', null, '');
+insert into sys_product_category values(2, 0, '服装鞋包', 2, '0', 'admin', sysdate(), '', null, '');
+insert into sys_product_category values(3, 0, '食品生鲜', 3, '0', 'admin', sysdate(), '', null, '');
+insert into sys_product_category values(4, 1, '手机通讯', 1, '0', 'admin', sysdate(), '', null, '');
+insert into sys_product_category values(5, 1, '电脑办公', 2, '0', 'admin', sysdate(), '', null, '');
+
+-- ==============================
+-- 22、商品表
+-- ==============================
+drop table if exists sys_product;
+create table sys_product (
+  product_id        bigint(20)      not null auto_increment    comment '商品ID',
+  product_name      varchar(100)    not null                   comment '商品名称',
+  product_code      varchar(50)     default null                comment '商品编码',
+  category_id       bigint(20)      not null                   comment '商品分类ID',
+  price             decimal(10,2)   default 0.00                comment '商品价格',
+  cost_price        decimal(10,2)   default null                comment '成本价',
+  stock             int(10)         default 0                   comment '库存数量',
+  product_unit      varchar(20)     default null                comment '单位',
+  product_weight    decimal(10,2)   default null                comment '重量(kg)',
+  product_desc      varchar(500)    default null                comment '商品描述',
+  product_img       varchar(255)    default null                comment '商品图片',
+  status            char(1)         default '0'                 comment '商品状态（0正常 1下架）',
+  promote           char(1)         default '0'                 comment '是否促销（0否 1是）',
+  promote_price     decimal(10,2)   default null                comment '促销价格',
+  create_by         varchar(64)     default ''                 comment '创建者',
+  create_time       datetime                                   comment '创建时间',
+  update_by         varchar(64)     default ''                  comment '更新者',
+  update_time       datetime                                   comment '更新时间',
+  remark            varchar(500)    default null                comment '备注',
+  del_flag          char(1)         default '0'                 comment '删除标志（0存在 1删除）',
+  primary key (product_id)
+) engine=innodb auto_increment=100 comment='商品表';
+
+-- 初始化商品数据
+insert into sys_product values(1, 'iPhone 15 Pro Max', 'IPHONE15PM', 4, 9999.00, 7500.00, 50, '台', 0.25, '苹果旗舰手机', '/images/iphone15.jpg', '0', '0', null, 'admin', sysdate(), '', null, '', '0');
+insert into sys_product values(2, 'MacBook Pro 14英寸', 'MBP14', 5, 14999.00, 12000.00, 30, '台', 1.6, '专业笔记本电脑', '/images/mbp14.jpg', '0', '1', 13999.00, 'admin', sysdate(), '', null, '', '0');
+
+-- ==============================
+-- 商品管理菜单
+-- ==============================
+-- 商品管理目录
+insert into sys_menu values('2000', '商品管理', '0', '6', 'product', null, '', '', 1, 0, 'M', '0', '0', '', 'shopping', 'admin', sysdate(), '', null, '商品管理目录');
+-- 商品分类菜单
+insert into sys_menu values('2002', '商品分类', '2000', '1', 'category', 'product/category/index', '', '', 1, 0, 'C', '0', '0', 'product:category:list', 'shopping', 'admin', sysdate(), '', null, '商品分类菜单');
+-- 商品列表菜单
+insert into sys_menu values('2001', '商品列表', '2000', '2', 'product', 'product/product/index', '', '', 1, 0, 'C', '0', '0', 'product:product:list', 'shopping', 'admin', sysdate(), '', null, '商品列表菜单');
+-- 分类按钮权限
+insert into sys_menu values('20020', '分类查询', '2002', '1', '#', '', '', '', 1, 0, 'F', '0', '0', 'product:category:query', '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('20021', '分类新增', '2002', '2', '#', '', '', '', 1, 0, 'F', '0', '0', 'product:category:add', '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('20022', '分类修改', '2002', '3', '#', '', '', '', 1, 0, 'F', '0', '0', 'product:category:edit', '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('20023', '分类删除', '2002', '4', '#', '', '', '', 1, 0, 'F', '0', '0', 'product:category:remove', '#', 'admin', sysdate(), '', null, '');
+-- 商品按钮权限
+insert into sys_menu values('20010', '商品查询', '2001', '1', '#', '', '', '', 1, 0, 'F', '0', '0', 'product:product:query', '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('20011', '商品新增', '2001', '2', '#', '', '', '', 1, 0, 'F', '0', '0', 'product:product:add', '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('20012', '商品修改', '2001', '3', '#', '', '', '', 1, 0, 'F', '0', '0', 'product:product:edit', '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('20013', '商品删除', '2001', '4', '#', '', '', '', 1, 0, 'F', '0', '0', 'product:product:remove', '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('20014', '商品导出', '2001', '5', '#', '', '', '', 1, 0, 'F', '0', '0', 'product:product:export', '#', 'admin', sysdate(), '', null, '');
