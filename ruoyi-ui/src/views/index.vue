@@ -41,7 +41,10 @@
           </div>
           <div class="stat-info">
             <div class="stat-label">总成本金额</div>
-            <div class="stat-value">¥{{ stats.totalCost }}</div>
+            <div class="stat-value">
+              <span class="cost-value">¥{{ formatCostValue(stats.totalCost) }}</span>
+              <span v-if="isWanUnit(stats.totalCost)" class="cost-unit">万</span>
+            </div>
           </div>
         </div>
       </el-col>
@@ -97,8 +100,16 @@ export default {
       this.stats.categoryCount = data.length
       this.stats.productCount = data.reduce((sum, item) => sum + Number(item.productCount || 0), 0)
       this.stats.totalStock = data.reduce((sum, item) => sum + Number(item.totalStock || 0), 0)
-      const totalCost = data.reduce((sum, item) => sum + Number(item.totalCost || 0), 0)
-      this.stats.totalCost = totalCost.toLocaleString('zh-CN', { minimumFractionDigits: 2 })
+      this.stats.totalCost = data.reduce((sum, item) => sum + Number(item.totalCost || 0), 0)
+    },
+    formatCostValue(value) {
+      if (value >= 10000) {
+        return (value / 10000).toFixed(2)
+      }
+      return value.toLocaleString('zh-CN', { minimumFractionDigits: 2 })
+    },
+    isWanUnit(value) {
+      return value >= 10000
     }
   }
 }
@@ -171,6 +182,12 @@ export default {
         font-size: 24px;
         font-weight: bold;
         color: #303133;
+
+        .cost-unit {
+          font-size: 14px;
+          color: #f56c6c;
+          margin-left: 2px;
+        }
       }
     }
   }
